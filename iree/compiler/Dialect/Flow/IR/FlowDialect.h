@@ -31,6 +31,9 @@ class FlowDialect : public Dialect {
   explicit FlowDialect(MLIRContext *context);
   static StringRef getDialectNamespace() { return "flow"; }
 
+  Type parseType(DialectAsmParser &parser) const override;
+  void printType(Type type, DialectAsmPrinter &p) const override;
+
   static bool isDialectOp(Operation *op) {
     return op && op->getDialect() &&
            op->getDialect()->getNamespace() == getDialectNamespace();

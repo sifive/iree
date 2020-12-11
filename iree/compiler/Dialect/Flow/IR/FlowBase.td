@@ -16,6 +16,7 @@
 #define IREE_DIALECT_FLOW_BASE
 
 include "iree/compiler/Dialect/IREE/IR/IREEBase.td"
+include "iree/compiler/Dialect/Shape/IR/ShapeBase.td"
 
 //===----------------------------------------------------------------------===//
 // IREE execution flow dialect
@@ -132,6 +133,30 @@ def FLOW_Workload : AnyTypeOf<[Index]> {
 }
 
 def FLOW_WorkloadAttr : IREE_IndexAttrBase<"size_t">;
+
+def FLOW_DispatchInput : DialectType<
+    FLOW_Dialect,
+    CPred<"$_self.isa<IREE::Flow::DispatchInputType>()">,
+    "dispatch.input"> {
+  let typeDescription = [{
+    A placeholder for a dispatch region input operand. This can be used to query
+    the metadata about the input (such as its shape) as well as load from the
+    backing tensor representation.
+  }];
+}
+
+def FLOW_DispatchOutput : DialectType<
+    FLOW_Dialect,
+    CPred<"$_self.isa<IREE::Flow::DispatchOutputType>()">,
+    "dispatch.output"> {
+  let typeDescription = [{
+    A placeholder for a dispatch region output result. This can be used to
+    query the metadata about the output (such as its shape) as well as store
+    into the backing tensor representation.
+  }];
+}
+
+def FLOW_DispatchIO : AnyTypeOf<[FLOW_DispatchInput, FLOW_DispatchOutput]>;
 
 // Use no padding and clamp the window to the valid area, possibly stopping
 // early prior to having covered all data.
